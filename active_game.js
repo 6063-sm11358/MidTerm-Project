@@ -13,6 +13,9 @@ class Tributes
     this.rad_Tribute = 15;
     this.xVel_Tribute = int(random(10,50));
     this.yVel_Tribute = int(random(10,50));
+    //this.district_id = [1-12]; --> will be given during instantiation: constructor(i);
+    //this.hitpoints = 100;
+    //this.hit_value = int(random(20,50));
   }
   updateTributePos()
   {
@@ -38,9 +41,45 @@ class Tributes
     noStroke();
     ellipse(this.xPos_Tribute, this.yPos_Tribute, 2*this.rad_Tribute);
   }
-  //collision_detection(){}
-  //hitpoints(){}
+  // collision_detection()
+  // {
+  //   if(collision with self)
+  //   {
+  //     ignore;
+  //   }
+  //   else
+  //   {
+  //     for(all other tributes)
+  //     {
+  //       detect collision and reduce hitpoints accordingly;
+  //     }
+  //   }
+  // }
+  // hitpoints()
+  // {
+  //   if(collision)
+  //   {
+  //     hitpoints = hitpoints-(otherTribute.hit_value);
+  //   }
+  // }
 }
+
+// function tributesAlive()
+// {
+//   let tributeCounter = totalTributes;
+//   if(tributeObject.hitpoints==0)
+//   {
+//     tributeCounter--;
+//   }
+// }
+
+// function victorChecker()
+// {
+//   if(tributeCounter==1)
+//   {
+//     display tribute details;
+//   }
+// }
 
 function setup()
 {
@@ -58,6 +97,11 @@ function draw()
   if(millis()>eventChange)
   {
     background(255);
+    //background-color: green -- BEAUTIFICATION
+    //for(entire canvas)
+    // {
+    //   generate lines to mimic radar / gps;
+    // }
 
     for(let i=0; i<totalTributes; i++)
     {

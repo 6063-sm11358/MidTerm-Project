@@ -4,11 +4,12 @@ let projectFont;
 
 class Tribute_Static
 {
-  constructor()
+  constructor(_disID)
   {
     this.xPos_Tribute = 0;
     this.yPos_Tribute = 0;
-    this.rad_Tribute = 15;
+    this.rad_Tribute = 20;
+    this.districtID_Tribute = _disID;
   }
   tributeCreate()
   {
@@ -46,7 +47,7 @@ function setup()
   //generating tribute circles
   for(let i=0; i<totalTributes; i++)
   {
-    let tributeObject = new Tribute_Static;
+    let tributeObject = new Tribute_Static(i+1);
     tributeArray.push(tributeObject);
   }
 

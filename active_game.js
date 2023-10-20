@@ -17,9 +17,15 @@ let gameMakerButton;
 let timer = 1000;
 let eventChange = 0;
 
+let countdownFont;
+let canonSound;
+let gameBGM;
+let gameMap;
+
 function preload()
 {
   countdownFont = loadFont("./Oxanium.ttf");
+  gameMap = loadImage("./GameMap.jpeg");
 }
 
 class Tributes
@@ -105,6 +111,12 @@ class Tributes
     this.yPos_Tribute = -this.rad_Tribute;
     this.rad_Tribute = 0;
     totalTributes--;
+    canonSound.play();
+
+    fill(255);
+    textAlign(CENTER,CENTER);
+    textSize(24);
+    text("D"+this.districtID_Tribute, width-50, 50);
   }
   recalculateHP()
   {
@@ -151,7 +163,7 @@ class Tributes
     strokeWeight(0);
     textAlign(CENTER,CENTER);
     textSize(14);
-    text(this.districtID_Tribute, this.xPos_Tribute, this.yPos_Tribute);
+    text("D"+this.districtID_Tribute, this.xPos_Tribute, this.yPos_Tribute);
     this.gameMarkerOverride();
   }
   gameMarkerOverride()
@@ -162,7 +174,7 @@ class Tributes
       gameMakerField.position(20,height-50);
       gameMakerField.size(30);
 
-      gameMakerButton = createButton('Submit');
+      gameMakerButton = createButton('Eliminate');
       gameMakerButton.position((gameMakerField.x + gameMakerField.width)+5, gameMakerField.y);
       gameMakerButton.mousePressed(eliminateGM);
     }
@@ -191,6 +203,9 @@ function eliminateGM()
 function setup()
 {
   createCanvas(windowWidth, windowHeight);
+  canonSound = createAudio("./CanonSound.mp3");
+  gameBGM = createAudio("./GameBGM.mp3");
+  gameBGM.loop();
   countdownColors = [color(0,0,75), color(0,25,50), color(0,50,25)];
 
   for(let i=0; i<totalTributes; i++)
@@ -218,6 +233,7 @@ function draw()
 {
   if(millis()>eventChange)
   {
+    gameBGM.play();
     textFont(countdownFont);
     textSize(height);
 
@@ -246,7 +262,9 @@ function draw()
     
     else if(countdownScreen >= countdownArray.length)
     {
-      background(0,50,0);
+      imageMode(CENTER);
+      image(gameMap, width/2, height/2, width*2, height*1.5);
+      background(0,50,0,210);
       stroke(255,1);
       strokeWeight(1);
       for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)

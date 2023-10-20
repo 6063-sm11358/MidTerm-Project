@@ -305,6 +305,25 @@ function detectVictor()
   {
     fill(0,150);
     rect(0,0,width,height);
+
+    for(let i=0; i<tributeArray.length; i++)
+    {
+      if(tributeArray[i].rad_Tribute!=0)
+      {
+        fill(255);
+        noStroke();
+        textAlign(CENTER,CENTER);
+
+        fill(0,255,0);
+        textSize(75);
+        text("-| HUNGER GAMES |-", width/2, height/4);
+        
+        fill(255);
+        textSize(32);
+        text("WINNER: D"+tributeArray[i].districtID_Tribute, width/2, height/2);
+      }
+    }
+
     noLoop();
   }
 }

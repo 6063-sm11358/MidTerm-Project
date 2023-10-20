@@ -67,19 +67,28 @@ function setup()
   fill(255);
 
   textSize(32);
-  text("<< STAGING GROUNDS >>", width-(width-400), height-(height+190));
-  textSize(15);
   fill(255,0,0);
-  text("... initializing hunger games", width-(width-449), height-(height+143));
-  text("... awaiting user-input", width-(width-469), height-(height+123));
+  text("HUNGER GAMES", width-(width-423), height-(height+190));
+  fill(255);
+  text("STAGING GROUNDS", width-(width-400), height-(height+160));
+
+  textSize(15);
+  fill(0,255,0);
+  text("... initializing hunger games", width-(width-449), height-(height+123));
+  text("... awaiting user-input", width-(width-469), height-(height+103));
+
+  textSize(18);
+  fill(255);
+  text("< Press [ENTER] to Commence the Game >", width-(width-370), 7);
+
+  textSize(15);
+  fill(0,255,0);
+  text("... gamemaker interface", width-(width-465), 55);
+  text("... press [G] to display console (in-game)", width-(width-410), 76);
 }
 
 function draw()
-{
-  textSize(18);
-  fill(255);
-  text("[ Press 'ENTER' to Commence the Game ]", width-(width-400), 7);
-  
+{ 
   if(keyCode==ENTER)
   {
     window.open("./hungergames_smx.html","_self");

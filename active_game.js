@@ -5,12 +5,22 @@ let tribute_xVel_Choices = [];
 let tribute_yVel_Choices = [];
 let tribute_Vel_Array = [-4,-3,-2,-1,1,2,3,4];
 
+let countdownScreen = 0;
+let countdownArray = [3,2,1];
+let countdownColors = [];
+
+let gameMakerTotal = totalTributes;
 let gameMakerField;
 let gameMakerKeyValue;
 let gameMakerButton;
 
-let timer = 100;
+let timer = 1000;
 let eventChange = 0;
+
+function preload()
+{
+  countdownFont = loadFont("./Oxanium.ttf");
+}
 
 class Tributes
 {
@@ -120,7 +130,7 @@ class Tributes
     }
     else if(this.hp_Tribute<10)
     {
-      this.healthBar_Tribute = color('Black');
+      this.healthBar_Tribute = color(75,0,0);
     }
   }
   tributeCreate()
@@ -146,7 +156,7 @@ class Tributes
   }
   gameMarkerOverride()
   {
-    if(keyCode==ENTER)
+    if(key=='g')
     {
       gameMakerField = createInput();
       gameMakerField.position(20,height-50);
@@ -163,25 +173,25 @@ function eliminateGM()
 {
   gameMakerKeyValue = gameMakerField.value();
   gameMakerField.value('');
-  for(let i=0; i<totalTributes; i++)
+
+  let i = gameMakerKeyValue-1;
+  let j = i+(gameMakerTotal/2);
+
+  if(tributeArray[i].xVel_Tribute!=0 && tributeArray[i].yVel_Tribute!=0)
   {
-    let tributesObject1 = tributeArray[i];
-    let j=((totalTributes/2)+i);
-    let tributesObject2 = tributeArray[j];
-    // if(tributesObject1.districtID_Tribute==gameMakerKeyValue)
-    // {
-    //   tributesObject1.eliminateTribute();
-    // }
-    // if(tributesObject2.districtID_Tribute==gameMakerKeyValue)
-    // {
-    //   tributesObject2.eliminateTribute();
-    // }
+    tributeArray[i].eliminateTribute();
+  }
+
+  if(tributeArray[j].xVel_Tribute!=0 && tributeArray[j].yVel_Tribute!=0)
+  {
+    tributeArray[j].eliminateTribute();
   }
 }
 
 function setup()
 {
   createCanvas(windowWidth, windowHeight);
+  countdownColors = [color(0,0,75), color(0,25,50), color(0,50,25)];
 
   for(let i=0; i<totalTributes; i++)
   { 
@@ -208,24 +218,54 @@ function draw()
 {
   if(millis()>eventChange)
   {
-    background(0,50,0);
-    stroke(255,1);
-    strokeWeight(1);
-    for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
+    textFont(countdownFont);
+    textSize(height);
+
+    if(countdownScreen < countdownArray.length)
     {
-      for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+      background(countdownColors[countdownScreen]);
+        
+      fill(255);
+      strokeWeight(0);
+      textAlign(CENTER,CENTER);
+      text(countdownArray[countdownScreen], width/2.05, height/2.3);
+
+      stroke(255,1);
+      strokeWeight(1);
+      for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
       {
-        line(xPos_Line, 0, xPos_Line, height);
-        line(0, yPos_Line, width, yPos_Line);
+        for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+        {
+          line(xPos_Line, 0, xPos_Line, height);
+          line(0, yPos_Line, width, yPos_Line);
+        }
       }
+
+      countdownScreen++;
     }
     
-    for(let i=0; i<tributeArray.length; i++)
+    else if(countdownScreen >= countdownArray.length)
     {
-      let tributesObject = tributeArray[i];
-      tributesObject.updateTributePos();
-      tributesObject.tributeCreate();
+      background(0,50,0);
+      stroke(255,1);
+      strokeWeight(1);
+      for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
+      {
+        for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+        {
+          line(xPos_Line, 0, xPos_Line, height);
+          line(0, yPos_Line, width, yPos_Line);
+        }
+      }
+      
+      for(let i=0; i<tributeArray.length; i++)
+      {
+        let tributesObject = tributeArray[i];
+        tributesObject.updateTributePos();
+        tributesObject.tributeCreate();
+      }
     }
+
     eventChange = millis()+timer;
     detectVictor();
   }

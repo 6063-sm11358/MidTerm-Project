@@ -82,6 +82,6 @@ function draw()
   
   if(keyCode==ENTER)
   {
-    window.open("./index_active.html","_self");
+    window.open("./hungergames_smx.html","_self");
   }
 }

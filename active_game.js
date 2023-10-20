@@ -275,6 +275,8 @@ function detectVictor()
 {
   if(totalTributes==1)
   {
+    fill(0,150);
+    rect(0,0,width,height);
     noLoop();
   }
 }

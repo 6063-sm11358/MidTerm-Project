@@ -1,26 +1,30 @@
-let totalTributes = 12;
+let totalTributes = 24;
 let tributeArray = [];
 
 let tribute_xVel_Choices = [];
 let tribute_yVel_Choices = [];
 let tribute_Vel_Array = [-4,-3,-2,-1,1,2,3,4];
 
-let timer = 1000;
+let gameMakerField;
+let gameMakerKeyValue;
+let gameMakerButton;
+
+let timer = 100;
 let eventChange = 0;
 
 class Tributes
 {
   constructor(_xVelVar, _yVelVar, _disID)
   {
-    this.xPos_Tribute = random(0,windowWidth);
-    this.yPos_Tribute = random(0,windowHeight);
+    this.xPos_Tribute = random(50,windowWidth-50);
+    this.yPos_Tribute = random(50,windowHeight-50);
     this.rad_Tribute = 20;
     this.xVel_Tribute = _xVelVar;
     this.yVel_Tribute = _yVelVar;
     this.districtID_Tribute = _disID;
     this.hp_Tribute = 100;
     this.healthBar_Tribute = this.recalculateHP();
-    this.attackValue_Tribute = int(random(1,5))*10;
+    this.attackValue_Tribute = int(random(1,4))*10;
   }
   updateTributePos()
   {
@@ -43,7 +47,7 @@ class Tributes
   }
   checkCollision(otherTribute)
   {
-    if(this==otherTribute)
+    if(this==otherTribute || this.districtID_Tribute==otherTribute.districtID_Tribute)
     {
       return false;
     }
@@ -136,7 +140,42 @@ class Tributes
     }
     strokeWeight(0);
     textAlign(CENTER,CENTER);
+    textSize(14);
     text(this.districtID_Tribute, this.xPos_Tribute, this.yPos_Tribute);
+    this.gameMarkerOverride();
+  }
+  gameMarkerOverride()
+  {
+    if(keyCode==ENTER)
+    {
+      gameMakerField = createInput();
+      gameMakerField.position(20,height-50);
+      gameMakerField.size(30);
+
+      gameMakerButton = createButton('Submit');
+      gameMakerButton.position((gameMakerField.x + gameMakerField.width)+5, gameMakerField.y);
+      gameMakerButton.mousePressed(eliminateGM);
+    }
+  }
+}
+
+function eliminateGM()
+{
+  gameMakerKeyValue = gameMakerField.value();
+  gameMakerField.value('');
+  for(let i=0; i<totalTributes; i++)
+  {
+    let tributesObject1 = tributeArray[i];
+    let j=((totalTributes/2)+i);
+    let tributesObject2 = tributeArray[j];
+    // if(tributesObject1.districtID_Tribute==gameMakerKeyValue)
+    // {
+    //   tributesObject1.eliminateTribute();
+    // }
+    // if(tributesObject2.districtID_Tribute==gameMakerKeyValue)
+    // {
+    //   tributesObject2.eliminateTribute();
+    // }
   }
 }
 
@@ -152,7 +191,15 @@ function setup()
     
   for(let i=0; i<totalTributes; i++)
   {
-    let tributesObject = new Tributes(tribute_xVel_Choices[i]*5, tribute_yVel_Choices[i]*5, i+1);
+    if(i<totalTributes/2)
+    {
+      distID=i;
+    }
+    else
+    {
+      distID=i-(totalTributes/2)
+    }
+    let tributesObject = new Tributes(tribute_xVel_Choices[i]*5, tribute_yVel_Choices[i]*5, distID+1);
     tributeArray.push(tributesObject);
   }
 }
@@ -180,5 +227,14 @@ function draw()
       tributesObject.tributeCreate();
     }
     eventChange = millis()+timer;
+    detectVictor();
+  }
+}
+
+function detectVictor()
+{
+  if(totalTributes==1)
+  {
+    noLoop();
   }
 }

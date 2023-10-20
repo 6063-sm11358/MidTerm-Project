@@ -148,8 +148,18 @@ class Tributes
   tributeCreate()
   {
     fill(this.healthBar_Tribute);
-    stroke(0);
-    strokeWeight(1);
+
+    if(floor(eventChange/1000)%5==0)
+    {
+      stroke(255);
+      strokeWeight(5);
+    }
+    else
+    {
+      stroke(0);
+      strokeWeight(1);
+    }
+
     ellipse(this.xPos_Tribute, this.yPos_Tribute, 2*this.rad_Tribute);
     
     if(this.hp_Tribute>=30)

@@ -1,3 +1,4 @@
+//variable initializations
 let totalTributes = 24;
 let tributeArray = [];
 
@@ -22,12 +23,16 @@ let canonSound;
 let gameBGM;
 let gameMap;
 
+let click = 0;
+
+//pre-loading game font & background map
 function preload()
 {
   countdownFont = loadFont("./Oxanium.ttf");
   gameMap = loadImage("./GameMap.jpeg");
 }
 
+//declaring class of "Tributes"
 class Tributes
 {
   constructor(_xVelVar, _yVelVar, _disID)
@@ -49,6 +54,7 @@ class Tributes
     this.checkMapEdge();
     this.checkCollisionAll();
   }
+  //checking screen-edge collisions
   checkMapEdge()
   {
     if(this.xPos_Tribute+this.rad_Tribute>=windowWidth || this.xPos_Tribute-this.rad_Tribute<=0)
@@ -61,8 +67,10 @@ class Tributes
       this.yVel_Tribute*= -1;
     }
   }
+  //calculating distance for gauging collisions
   checkCollision(otherTribute)
   {
+    //ignoring collisions between self & same district ID "Tributes"
     if(this==otherTribute || this.districtID_Tribute==otherTribute.districtID_Tribute)
     {
       return false;
@@ -72,12 +80,14 @@ class Tributes
       let tributeDist = dist(this.xPos_Tribute, this.yPos_Tribute, otherTribute.xPos_Tribute, otherTribute.yPos_Tribute);
       if(tributeDist < this.rad_Tribute + otherTribute.rad_Tribute)
       {
+        //reducing hitpoints accordingly of both "Tributes" if they collide
         this.hp_Tribute-=otherTribute.attackValue_Tribute;
         otherTribute.hp_Tribute-=this.attackValue_Tribute;
         return true;
       }
     }
   }
+  //checking collisions between all "Tributes"
   checkCollisionAll()
   {
     let collision = false;
@@ -103,6 +113,7 @@ class Tributes
       this.recalculateHP();
     }
   }
+  //function for "eliminating Tributes"
   eliminateTribute()
   {
     this.xVel_Tribute = 0;
@@ -118,6 +129,7 @@ class Tributes
     textSize(24);
     text("D"+this.districtID_Tribute, width-50, 50);
   }
+  //function for calculating hitpoints & health-color based on collision impact
   recalculateHP()
   {
     if(this.hp_Tribute<=100 && this.hp_Tribute>=90)
@@ -145,10 +157,12 @@ class Tributes
       this.healthBar_Tribute = color(75,0,0);
     }
   }
+  //generating circles for every "Tribute"
   tributeCreate()
   {
     fill(this.healthBar_Tribute);
 
+    //generating white stroke every 5 seconds for "GPS dot effect"
     if(floor(eventChange/1000)%5==0)
     {
       stroke(255);
@@ -162,6 +176,7 @@ class Tributes
 
     ellipse(this.xPos_Tribute, this.yPos_Tribute, 2*this.rad_Tribute);
     
+    //changing district ID font color based on background circle color
     if(this.hp_Tribute>=30)
     {
       fill(0);
@@ -176,14 +191,17 @@ class Tributes
     text("D"+this.districtID_Tribute, this.xPos_Tribute, this.yPos_Tribute);
     this.gameMarkerOverride();
   }
+  //function to bring up the "gamemaker override console"
   gameMarkerOverride()
   {
     if(key=='g')
     {
+      //generating text-field
       gameMakerField = createInput();
       gameMakerField.position(20,height-50);
       gameMakerField.size(30);
 
+      //generating button
       gameMakerButton = createButton('Eliminate');
       gameMakerButton.position((gameMakerField.x + gameMakerField.width)+5, gameMakerField.y);
       gameMakerButton.mousePressed(eliminateGM);
@@ -191,6 +209,7 @@ class Tributes
   }
 }
 
+//function to eliminate "Tribute" based on gamemaker's input value
 function eliminateGM()
 {
   gameMakerKeyValue = gameMakerField.value();
@@ -215,17 +234,39 @@ function setup()
   createCanvas(windowWidth, windowHeight);
   canonSound = createAudio("./CanonSound.mp3");
   gameBGM = createAudio("./GameBGM.mp3");
-  gameBGM.loop();
   countdownColors = [color(0,0,75), color(0,25,50), color(0,50,25)];
 
+  //generating blueprint lines for the background
+  stroke(255,1);
+  strokeWeight(1);
+  for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
+  {
+    for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+    {
+      line(xPos_Line, 0, xPos_Line, height);
+      line(0, yPos_Line, width, yPos_Line);
+    }
+  }
+
+  fill(0,255,0);
+  textAlign(CENTER,CENTER);
+  textSize(18);
+  textFont("monospace");
+  text("GAME LOADED. COMMENCE NOW?", width/2, height/2-60);
+  text("- [CLICK HERE] to Initiate Countdown -", width/2, height/2-22);
+  text("press [G] in-game to bring up override console", width/2, height/1.11);
+
+  //assigning random 'x' & 'y' velocity values to "Tributes"
   for(let i=0; i<totalTributes; i++)
   { 
     tribute_xVel_Choices.push(random(tribute_Vel_Array));
     tribute_yVel_Choices.push(random(tribute_Vel_Array));
   }
-    
+
+  //initializing Tribute class
   for(let i=0; i<totalTributes; i++)
   {
+    //giving unique & sequential district_ID numbers to "Tributes"
     if(i<totalTributes/2)
     {
       distID=i;
@@ -241,64 +282,71 @@ function setup()
 
 function draw()
 {
-  if(millis()>eventChange)
+  if(click==1)
   {
-    gameBGM.play();
-    textFont(countdownFont);
-    textSize(height);
-
-    if(countdownScreen < countdownArray.length)
+    if(millis()>eventChange)
     {
-      background(countdownColors[countdownScreen]);
-        
-      fill(255);
-      strokeWeight(0);
-      textAlign(CENTER,CENTER);
-      text(countdownArray[countdownScreen], width/2.05, height/2.3);
+      gameBGM.play();
+      gameBGM.loop();
+      textFont(countdownFont);
+      textSize(height);
 
-      stroke(255,1);
-      strokeWeight(1);
-      for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
+      //generating initial countdown screen
+      if(countdownScreen < countdownArray.length)
       {
-        for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
-        {
-          line(xPos_Line, 0, xPos_Line, height);
-          line(0, yPos_Line, width, yPos_Line);
-        }
-      }
+        background(countdownColors[countdownScreen]);
+          
+        fill(255);
+        strokeWeight(0);
+        textAlign(CENTER,CENTER);
+        text(countdownArray[countdownScreen], width/2.05, height/2.3);
 
-      countdownScreen++;
-    }
-    
-    else if(countdownScreen >= countdownArray.length)
-    {
-      imageMode(CENTER);
-      image(gameMap, width/2, height/2, width*2, height*1.5);
-      background(0,50,0,210);
-      stroke(255,1);
-      strokeWeight(1);
-      for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
-      {
-        for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+        stroke(255,1);
+        strokeWeight(1);
+        for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
         {
-          line(xPos_Line, 0, xPos_Line, height);
-          line(0, yPos_Line, width, yPos_Line);
+          for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+          {
+            line(xPos_Line, 0, xPos_Line, height);
+            line(0, yPos_Line, width, yPos_Line);
+          }
         }
+
+        countdownScreen++;
       }
       
-      for(let i=0; i<tributeArray.length; i++)
+      //gameplay code
+      else if(countdownScreen >= countdownArray.length)
       {
-        let tributesObject = tributeArray[i];
-        tributesObject.updateTributePos();
-        tributesObject.tributeCreate();
+        imageMode(CENTER);
+        image(gameMap, width/2, height/2, width*2, height*1.5);
+        background(0,50,0,210);
+        stroke(255,1);
+        strokeWeight(1);
+        for(let xPos_Line = 0; xPos_Line <=width; xPos_Line+=40)
+        {
+          for(let yPos_Line = 0; yPos_Line <=height; yPos_Line+=40)
+          {
+            line(xPos_Line, 0, xPos_Line, height);
+            line(0, yPos_Line, width, yPos_Line);
+          }
+        }
+        
+        for(let i=0; i<tributeArray.length; i++)
+        {
+          let tributesObject = tributeArray[i];
+          tributesObject.updateTributePos();
+          tributesObject.tributeCreate();
+        }
       }
-    }
 
-    eventChange = millis()+timer;
-    detectVictor();
+      eventChange = millis()+timer;
+      detectVictor();
+    }
   }
 }
 
+//function to detect lone "Tribute" as Victor
 function detectVictor()
 {
   if(totalTributes==1)
@@ -326,4 +374,9 @@ function detectVictor()
 
     noLoop();
   }
+}
+
+function mouseClicked()
+{
+  click = 1;
 }

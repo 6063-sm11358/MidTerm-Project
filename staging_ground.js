@@ -79,7 +79,7 @@ function setup()
 
   textSize(18);
   fill(255);
-  text("< Press [ENTER] to Commence the Game >", width-(width-370), 7);
+  text("< Press [ENTER] to prep load-up >", width-(width-407), 7);
 
   textSize(15);
   fill(0,255,0);

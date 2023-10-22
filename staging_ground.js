@@ -1,4 +1,4 @@
-let totalTributes = 12;
+let totalTributes = 24;
 let tributeArray = [];
 let projectFont;
 
@@ -55,7 +55,7 @@ function setup()
   for(let i=0; i<totalTributes; i++)
   {
     let tributeObject = tributeArray[i];
-    translate(-35,150);
+    translate(-10,75);
     rotate(2*PI/totalTributes);
     tributeObject.tributeCreate();
   }
@@ -68,14 +68,14 @@ function setup()
 
   textSize(32);
   fill(255,0,0);
-  text("HUNGER GAMES", width-(width-423), height-(height+190));
+  text("HUNGER GAMES", width-(width-423), height-(height+150));
   fill(255);
-  text("STAGING GROUNDS", width-(width-400), height-(height+160));
+  text("STAGING GROUNDS", width-(width-400), height-(height+120));
 
   textSize(15);
   fill(0,255,0);
-  text("... initializing hunger games", width-(width-449), height-(height+123));
-  text("... awaiting user-input", width-(width-469), height-(height+103));
+  text("... initializing hunger games", width-(width-449), height-(height+83));
+  text("... awaiting user-input", width-(width-469), height-(height+63));
 
   textSize(18);
   fill(255);
@@ -83,8 +83,8 @@ function setup()
 
   textSize(15);
   fill(0,255,0);
-  text("... gamemaker interface", width-(width-465), 55);
-  text("... press [G] to display console (in-game)", width-(width-410), 76);
+  text("... activating gamemaker interface", width-(width-429), 115);
+  text("... press [G] to display console while in-game", width-(width-395), 135);
 }
 
 function draw()
